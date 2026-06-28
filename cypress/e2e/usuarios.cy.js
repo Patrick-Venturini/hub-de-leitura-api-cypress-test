@@ -97,7 +97,7 @@ describe('POST - Teste de API - Gestão de Usuários', () => {
 
 describe('PUT - Teste de API - Gestão de Usuários', () => {
 
-    it('PUT - Teste de API - Gestão de usuários', () => {
+    it('Deve atualizar um usuário com sucesso', () => {
         cy.api({
             method: 'PUT',
             url: 'users/10',
@@ -133,3 +133,28 @@ describe('PUT - Teste de API - Gestão de Usuários', () => {
     });
 });
 
+describe('DELETE - Teste de API - Gestão de Usuários', () => {
+    it.skip('Deve excluir usuário com sucesso', () => {
+        cy.api({
+            method: 'DELETE',
+            url: 'users/19',
+            headers: { 'Authorization': token }
+        }).should(response => {
+            expect(response.status).to.equal(200)
+            expect(response.body.message).to.equal('Usuário removido com sucesso.')
+        })
+    });
+
+    it('Deve excluir usuário com sucesso - De forma dinâmica', () => {
+        cy.cadastrarUsuario('Patrick Delete', 'email1@deletar.com', 'senha123').then(userId => {
+            cy.api({
+                method: 'DELETE',
+                url: `users/${userId}`,
+                headers: { 'Authorization': token }
+            }).should(response => {
+                expect(response.status).to.equal(200)
+                expect(response.body.message).to.equal('Usuário removido com sucesso.')
+            })
+        })
+    });
+});
