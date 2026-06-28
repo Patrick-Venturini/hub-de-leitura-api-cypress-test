@@ -63,7 +63,7 @@ describe('GET - Teste de API - Gestão de Usuários', () => {
 
 describe('POST - Teste de API - Gestão de Usuários', () => {
     it('Deve cadastrar um usuário com sucesso', () => {
-        let email = `fabio${Date.now()}@email.com`
+        let email = `patrick${Date.now()}@email.com`
         cy.api({
             method: 'POST',
             url: 'users',
@@ -94,3 +94,42 @@ describe('POST - Teste de API - Gestão de Usuários', () => {
         })
     });
 })
+
+describe('PUT - Teste de API - Gestão de Usuários', () => {
+
+    it('PUT - Teste de API - Gestão de usuários', () => {
+        cy.api({
+            method: 'PUT',
+            url: 'users/10',
+            headers: { 'Authorization': token },
+            body: {
+                name: "Patrick Venturini Alterado",
+                email: "patrick.novo.alterado@gmail.com",
+                password: "novaSenha123alterada"
+            }
+        }).should(response => {
+            expect(response.status).to.equal(200)
+            expect(response.body.message).to.equal('Usuário atualizado com sucesso.')
+        })
+    });
+
+    it('Deve atualizar um usuário com sucesso - De forma dinâmica', () => {
+        let email = `patrick${Date.now()}@email.com`
+        cy.cadastrarUsuario('Patrick Venturini', email, 'senha123').then(userId => {
+            cy.api({
+                method: 'PUT',
+                url: 'users/' + userId,
+                headers: { 'Authorization': token },
+                body: {
+                    name: "Patrick Venturini Alterado",
+                    email: email,
+                    password: "novaSenha123alterada"
+                }
+            }).should(response => {
+                expect(response.status).to.equal(200)
+                expect(response.body.message).to.equal('Usuário atualizado com sucesso.')
+            })
+        })
+    });
+});
+

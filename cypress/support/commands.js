@@ -36,3 +36,18 @@ Cypress.Commands.add('geraToken', (email, senha) => {
         return response.body.token
     })
 })
+
+Cypress.Commands.add('cadastrarUsuario', (nome, email, senha) => {
+    cy.request({
+        method: 'POST',
+        url: 'users',
+        body: {
+            "name": nome,
+            "email": email,
+            "password": senha
+        }
+    }).then(response => {
+        expect(response.status).to.equal(201)
+        return response.body.user.id
+    })
+})
