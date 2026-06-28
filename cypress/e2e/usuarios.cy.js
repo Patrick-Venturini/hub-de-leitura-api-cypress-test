@@ -1,6 +1,11 @@
 /// <reference types="cypress"/>
 
-let token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTc4MjY2MjcwMiwiZXhwIjoxNzgyNjkxNTAyfQ.Aq_HgUXtQBiHhhUI5NYrk7OlbOGJR6SlL9Max8oVb0E"
+let token
+beforeEach(() => {
+    cy.geraToken('admin@biblioteca.com', 'admin123').then(tkn => {
+        token = tkn
+    })
+})
 
 describe('GET - Teste de API - Gestão de Usuários', () => {
     it('Deve listar usuários com sucesso', () => {
@@ -58,12 +63,13 @@ describe('GET - Teste de API - Gestão de Usuários', () => {
 
 describe('POST - Teste de API - Gestão de Usuários', () => {
     it('Deve cadastrar um usuário com sucesso', () => {
+        let email = `fabio${Date.now()}@email.com`
         cy.api({
             method: 'POST',
             url: 'users',
             body: {
                 "name": "Patrick Teste",
-                "email": "patrick@teste123.com",
+                "email": email,
                 "password": "senha123"
             }
         }).should(response => {
