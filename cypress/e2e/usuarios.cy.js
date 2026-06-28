@@ -2,7 +2,7 @@
 
 let token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBiaWJsaW90ZWNhLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTc4MjY2MjcwMiwiZXhwIjoxNzgyNjkxNTAyfQ.Aq_HgUXtQBiHhhUI5NYrk7OlbOGJR6SlL9Max8oVb0E"
 
-describe('Teste de API - Gestão de Usuários', () => {
+describe('GET - Teste de API - Gestão de Usuários', () => {
     it('Deve listar usuários com sucesso', () => {
         cy.api({
             method: 'GET',
@@ -54,4 +54,37 @@ describe('Teste de API - Gestão de Usuários', () => {
             expect(response.status).to.equal(200)
         })
     })
+})
+
+describe('POST - Teste de API - Gestão de Usuários', () => {
+    it('Deve cadastrar um usuário com sucesso', () => {
+        cy.api({
+            method: 'POST',
+            url: 'users',
+            body: {
+                "name": "Patrick Teste",
+                "email": "patrick@teste123.com",
+                "password": "senha123"
+            }
+        }).should(response => {
+            expect(response.status).to.equal(201)
+            expect(response.body.message).to.equal('Usuário criado com sucesso.')
+        })
+    });
+
+    it('Deve validar um usuário cadastrado com email inválido', () => {
+        cy.api({
+            method: 'POST',
+            url: 'users',
+            body: {
+                "name": "Patrick Teste",
+                "email": "patrickteste123.com",
+                "password": "senha123"
+            },
+            failOnStatusCode: false
+        }).should(response => {
+            expect(response.status).to.equal(400)
+            expect(response.body.message).to.equal('Formato de email inválido.')
+        })
+    });
 })
